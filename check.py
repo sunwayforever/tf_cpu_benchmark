@@ -10,9 +10,16 @@ if len(sys.argv) != 2:
     print(f"usage: {sys.argv[0]} <log_file>")
     sys.exit(1)
 
+key = None
+x = []
 with open(sys.argv[1], "r") as f:
     for line in f.readlines():
-        name, p1, p2, _, n_thread, cost = line.strip().split(":")
+        name, p1, p2, n_thread_1, n_thread_2, cost = line.strip().split(":")
+        if key is None:
+            key = f"{name}:{p1}:{p2}"
+        if key == f"{name}:{p1}:{p2}":
+            x.append(int(n_thread_1) * int(n_thread_2))
+
         stat[name][f"{p1}:{p2}"].append(int(cost))
 
 for v in stat.values():
@@ -20,7 +27,7 @@ for v in stat.values():
         first = v[k][0]
         v[k] = [x / first for x in v[k]]
 
-x = list(range(1, 50, 2))
+# x = list(range(1, 50, 2))
 fig, axs = plt.subplots(len(stat))
 if len(stat) == 1:
     axs = [axs]
