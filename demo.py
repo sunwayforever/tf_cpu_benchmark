@@ -6,9 +6,9 @@ import sys
 import time
 
 # workaround: disable grappler
-# opts = tf.config.optimizer.get_experimental_options()
-# opts["disable_meta_optimizer"] = True
-# tf.config.optimizer.set_experimental_options(opts)
+opts = tf.config.optimizer.get_experimental_options()
+opts["disable_meta_optimizer"] = True
+tf.config.optimizer.set_experimental_options(opts)
 inter = int(sys.argv[1])
 intra = int(sys.argv[2])
 model_name = sys.argv[3]
@@ -65,6 +65,61 @@ def get_cnn(a, b):
     return model
 
 
+def get_inception(a, b):
+    input = tf.keras.Input(shape=(28, 28))
+    output = tf.keras.layers.Reshape((28, 28, 1))(input)
+    p1 = [
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+    ]
+    output = tf.keras.layers.Concatenate()(p1)
+    p2 = [
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+        tf.keras.layers.Conv2D(a, b, padding="same", activation="relu")(output),
+    ]
+    output = tf.keras.layers.Concatenate()(p2)
+    output = tf.keras.layers.Dropout(0.2)(output)
+    output = tf.keras.layers.Flatten()(output)
+    output = tf.keras.layers.Dense(10)(output)
+    return tf.keras.Model(inputs=input, outputs=output)
+
+
 def get_dnn(a):
     model = tf.keras.models.Sequential(
         [
@@ -93,6 +148,9 @@ if model_name == "cnn":
 
 if model_name == "dscnn":
     model = get_dscnn(model_p1, model_p2)
+
+if model_name == "inception":
+    model = get_inception(model_p1, model_p2)
 
 model.compile(optimizer="adam", loss=loss_fn, metrics=["accuracy"])
 
