@@ -155,7 +155,8 @@ if model_name == "inception":
 model.compile(optimizer="adam", loss=loss_fn, metrics=["accuracy"])
 
 a = time.time()
+b = time.process_time()
 model.fit(x_train, y_train, epochs=1, verbose=0)  # , callbacks = [tb]
 print(
-    f"{model_name}:{model_p1}:{model_p2}:{inter}:{intra}:{int((time.time() - a) * 1000)}"
+    f"{model_name}:{model_p1}:{model_p2}:{inter}:{intra}:{int((time.time() - a) * 1000)}:{int((time.process_time() - b) * 1000)}"
 )
