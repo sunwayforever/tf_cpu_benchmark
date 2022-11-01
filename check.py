@@ -66,7 +66,9 @@ for i, (k, v) in enumerate(stat.items()):
     axs2[i].set_ylabel("cpu time")
 
 fig.set_size_inches(18.5, 10.5)
+fig.tight_layout()
 fig.savefig(f"{sys.argv[1][:-4]}.png")
 
 fig2.set_size_inches(18.5, 10.5)
+fig2.tight_layout()
 fig2.savefig(f"{sys.argv[1][:-4]}.2.png")
