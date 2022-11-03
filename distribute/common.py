@@ -13,6 +13,8 @@ def get_model():
             tf.keras.layers.Conv2D(128, 5, padding="same", activation="relu"),
             tf.keras.layers.Conv2D(128, 5, padding="same", activation="relu"),
             tf.keras.layers.Conv2D(128, 5, padding="same", activation="relu"),
+            tf.keras.layers.Conv2D(128, 5, padding="same", activation="relu"),
+            tf.keras.layers.Conv2D(128, 5, padding="same", activation="relu"),
             tf.keras.layers.Dropout(0.2),
             tf.keras.layers.Flatten(),
             tf.keras.layers.Dense(10),
