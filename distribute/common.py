@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 # 2022-11-03 11:17
 import tensorflow as tf
+import os
+
 def get_model():
     model = tf.keras.models.Sequential(
         [
@@ -24,10 +26,16 @@ def get_model():
     return model
 
 import tensorflow_datasets as tfds
+
+def get_num_workers():
+    t = os.getenv("NUM_WORKERS")
+    if t:
+        return int(t)
+    return 0
+
 tfds.disable_progress_bar()
 BUFFER_SIZE = 10000
-NUM_WORKERS = 2
-GLOBAL_BATCH_SIZE = 64 * NUM_WORKERS
+GLOBAL_BATCH_SIZE = 32 * get_num_workers()
 
 def get_datasets():
   # 将 MNIST 数据从 (0, 255] 缩放到 (0., 1.]

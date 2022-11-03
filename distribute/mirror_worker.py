@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # 2022-11-03 10:02
-
 import tensorflow_datasets as tfds
 import tensorflow as tf
 tfds.disable_progress_bar()
@@ -16,7 +15,7 @@ from common import *
 
 os.environ['TF_CONFIG'] = json.dumps({
     'cluster': {
-        'worker': ["localhost:12345", "localhost:23456"]
+        'worker': [f"localhost:{23456+i}" for i in range(get_num_workers())]
     },
     'task': {'type': 'worker', 'index': int(sys.argv[1])}
 })
@@ -30,4 +29,4 @@ train_datasets = train_datasets.with_options(options)
 with strategy.scope():
   multi_worker_model = get_model()
 
-multi_worker_model.fit(x=train_datasets, epochs=2, steps_per_epoch=5)
+multi_worker_model.fit(x=train_datasets, epochs=1, steps_per_epoch=5)
